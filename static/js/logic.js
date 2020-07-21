@@ -25,7 +25,7 @@ d3.json(queryURL).then(function(data) {
         maxZoom: 18,
         zoomOffset: -1,
         id: "mapbox/streets-v11",
-        accessToken: API_KEY
+        accessToken: "pk.eyJ1IjoiZW1tYXN6YyIsImEiOiJja2J2Z2NieGMwMWRpMnFtdnozdDc2eW1tIn0.p7H1a96QFcxA6W_sZpImiA"
     }).addTo(myMap);
 
     // function getColor(d) {
@@ -52,16 +52,16 @@ d3.json(queryURL).then(function(data) {
         for (var i=0; i < places.length; i++) {
             var color = "";
             if (magnitude[i] > 5.0) {
-                color = "#ffffb2"
+                color = "red"
             }
             else if (magnitude[i] > 4.0) {
-                color = "#fecc5c";
+                color = "pink";
             }
             else if (magnitude[i] > 3.0) {
-                color = "#fd8d3c";
+                color = "yellow";
             }
             else {
-                color = "#e31a1c";
+                color = "green";
             }
         L.circle([lat[i],long[i]], {
             fillOpacity: 0.5,
@@ -72,12 +72,23 @@ d3.json(queryURL).then(function(data) {
 
     }
 
-    // var legend = L.control({ position: "bottomright" });
-    // legend.onAdd = function() {
-    //   var div = L.DomUtil.create("div", "info legend");
-    //   var labels = data.magnitude;
-
-    
-    // legend.addTo(map);
+    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function () {
+        var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, 3, 4, 5],
+        colors = [
+          "green",
+          "yellow",
+          "pink",
+          "red"
+        ];
+        // Loop through our intervals and generate a label with a colored square for each interval.
+        for (var i = 0; i < grades.length; i++) {
+          div.innerHTML += "<div class='legend-entry' style='background: " + colors[i] + "'> " +
+            grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+" + "</div>");
+        }
+        return div;
+      };
+      legend.addTo(myMap);
 
 });
